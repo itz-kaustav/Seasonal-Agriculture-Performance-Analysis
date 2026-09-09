@@ -1,4 +1,4 @@
-# Seasonal Agriculture Performance Analysis & Yield Prediction
+# Seasonal Agriculture Performance Analysis
 
 An end-to-end data analytics and machine learning pipeline evaluating the impact of seasonal variations on agricultural outcomes, resource consumption, and farm-level profitability across India.
 
