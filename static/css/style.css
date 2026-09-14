@@ -36,7 +36,6 @@ body, html {
     padding: 30px 20px;
 }
 
-/* Glassmorphic Container */
 .glass-dashboard {
     width: 100%;
     max-width: 960px;
@@ -49,7 +48,6 @@ body, html {
     box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
 }
 
-/* Header */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -107,7 +105,6 @@ body, html {
     box-shadow: 0 0 10px var(--accent-emerald);
 }
 
-/* Grid Layout */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -131,7 +128,6 @@ body, html {
     color: #cbd5e1;
 }
 
-/* Form Styles */
 .form-row {
     display: flex;
     flex-direction: column;
@@ -200,7 +196,6 @@ body, html {
     box-shadow: 0 10px 24px rgba(234, 88, 12, 0.45);
 }
 
-/* Metric Cards */
 .metrics-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -243,7 +238,6 @@ body, html {
     font-size: 0.75rem;
 }
 
-/* Advisory List */
 .recommendations-title {
     color: #fbbf24;
     font-size: 0.9rem;
@@ -275,7 +269,6 @@ body, html {
     padding-left: 0;
 }
 
-/* Responsive adjustments */
 @media (max-width: 860px) {
     .dashboard-grid {
         grid-template-columns: 1fr;
