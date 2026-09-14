@@ -28,11 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.success) {
-                // Populate metric cards
+             
                 yieldValue.textContent = data.yield.toFixed(2);
                 productionValue.textContent = data.total_production.toFixed(1);
 
-                // Populate advisory list (excluding the yield lines already shown in cards)
+               
                 recommendationsList.innerHTML = "";
                 const filteredInsights = data.recommendations.filter(
                     item => !item.toLowerCase().includes("predicted unit yield") &&
