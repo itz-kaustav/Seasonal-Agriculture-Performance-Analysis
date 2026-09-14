@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agriculture Intelligence & Recommendation System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-background">
+        <div class="glass-dashboard">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="brand">
+                    <span class="brand-icon">🌱🚜</span>
+                    <div class="brand-text">
+                        <h1>AgriSuggest AI</h1>
+                        <p>Seasonal Crop Yield Forecast & Decision Support</p>
+                    </div>
+                </div>
+                <div class="header-badge">
+                    <span class="live-dot"></span> ML Powered
+                </div>
+            </header>
+
+            <!-- Dual-Column Content Grid -->
+            <main class="dashboard-grid">
+                <!-- Left Column: Input Form -->
+                <section class="panel form-panel">
+                    <h2 class="panel-title">Field Parameters</h2>
+                    <form id="prediction-form" method="POST" action="/predict">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="crop">Crop Variety</label>
+                                <div class="select-wrapper">
+                                    <select name="crop" id="crop" required>
+                                        <option value="" disabled {% if not selected_crop %}selected{% endif %}>Select</option>
+                                        <option value="Rice" {% if selected_crop == 'Rice' %}selected{% endif %}>Rice</option>
+                                        <option value="Wheat" {% if selected_crop == 'Wheat' %}selected{% endif %}>Wheat</option>
+                                        <option value="Maize" {% if selected_crop == 'Maize' %}selected{% endif %}>Maize</option>
+                                        <option value="Sugarcane" {% if selected_crop == 'Sugarcane' %}selected{% endif %}>Sugarcane</option>
+                                        <option value="Cotton" {% if selected_crop == 'Cotton' %}selected{% endif %}>Cotton</option>
+                                        <option value="Chilli" {% if selected_crop == 'Chilli' %}selected{% endif %}>Chilli</option>
+                                        <option value="Pulses" {% if selected_crop == 'Pulses' %}selected{% endif %}>Pulses</option>
+                                        <option value="Groundnut" {% if selected_crop == 'Groundnut' %}selected{% endif %}>Groundnut</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="season">Cropping Season</label>
+                                <div class="select-wrapper">
+                                    <select name="season" id="season" required>
+                                        <option value="" disabled {% if not selected_season %}selected{% endif %}>Select</option>
+                                        <option value="Kharif" {% if selected_season == 'Kharif' %}selected{% endif %}>Kharif (Monsoon)</option>
+                                        <option value="Rabi" {% if selected_season == 'Rabi' %}selected{% endif %}>Rabi (Winter)</option>
+                                        <option value="Zaid" {% if selected_season == 'Zaid' %}selected{% endif %}>Zaid (Summer)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="irrigation_method">Irrigation System</label>
+                                <div class="select-wrapper">
+                                    <select name="irrigation_method" id="irrigation_method" required>
+                                        <option value="" disabled {% if not selected_irrigation %}selected{% endif %}>Select</option>
+                                        <option value="Drip" {% if selected_irrigation == 'Drip' %}selected{% endif %}>Drip Irrigation</option>
+                                        <option value="Sprinkler" {% if selected_irrigation == 'Sprinkler' %}selected{% endif %}>Sprinkler</option>
+                                        <option value="Flood" {% if selected_irrigation == 'Flood' %}selected{% endif %}>Flood Irrigation</option>
+                                        <option value="Rainfed" {% if selected_irrigation == 'Rainfed' %}selected{% endif %}>Rainfed</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="farm_area">Cultivated Land (Ha)</label>
+                                <input 
+                                    type="number" 
+                                    step="0.1" 
+                                    name="farm_area" 
+                                    id="farm_area" 
+                                    placeholder="Type" 
+                                    value="{{ selected_area if selected_area is defined and selected_area is not none else '' }}" 
+                                    min="0.1" 
+                                    max="100.0" 
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="submit-btn">
+                            <span>Generate Analysis</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Right Column: Results & Metric Badges -->
+                <section class="panel results-panel">
+                    <h2 class="panel-title">Yield & Advisory Output</h2>
+
+                    <!-- Metric Highlights -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-label">Predicted Yield</span>
+                            <div class="metric-value">
+                                <span id="yield-value">{{ pred_yield if pred_yield is defined else '--' }}</span>
+                                <span class="metric-unit">Tonnes/Ha</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <span class="metric-label">Estimated Production</span>
+                            <div class="metric-value">
+                                <span id="production-value">{{ total_production if total_production is defined else '--' }}</span>
+                                <span class="metric-unit">Tonnes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actionable Advisory List -->
+                    <div class="recommendations-container">
+                        <h3 class="recommendations-title">Key Field Recommendations</h3>
+                        <ul id="recommendations-list" class="advisory-list">
+                            {% if recommendations %}
+                                {% for item in recommendations %}
+                                    <li class="advisory-item">{{ item }}</li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="placeholder-item">Select parameters on the left and click <strong>Generate Analysis</strong> to display harvest predictions and agronomic advice.</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
