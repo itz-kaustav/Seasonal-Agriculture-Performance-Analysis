@@ -6,7 +6,6 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-# Load dataset
 data_path = os.path.join(
     os.path.dirname(__file__),
     '..',
@@ -14,7 +13,6 @@ data_path = os.path.join(
 )
 df = pd.read_csv(data_path)
 
-# Handle missing values as done in your Jupyter Notebook
 df_clean = df.dropna(subset=['Yield_Tonnes_Ha']).copy()
 df_clean['Rainfall_mm'] = df_clean['Rainfall_mm'].fillna(
     df_clean['Rainfall_mm'].median()
@@ -23,7 +21,6 @@ df_clean['Soil_Moisture_pct'] = df_clean['Soil_Moisture_pct'].fillna(
     df_clean['Soil_Moisture_pct'].median()
 )
 
-# Define feature sets
 cat_cols = ['Season', 'Crop', 'State', 'Irrigation_Method']
 num_cols = [
     'Farm_Area_Hectares',
@@ -46,7 +43,6 @@ num_cols = [
 X = df_clean[cat_cols + num_cols]
 y = df_clean['Yield_Tonnes_Ha']
 
-# Scikit-Learn Preprocessing Pipeline
 preprocessor = ColumnTransformer(
     transformers=[
         ('num', StandardScaler(), num_cols),
@@ -68,7 +64,6 @@ pipeline = Pipeline(
 
 pipeline.fit(X, y)
 
-# Save pipeline object
 model_path = os.path.join(os.path.dirname(__file__), 'crop_yield_model.pkl')
 joblib.dump(pipeline, model_path)
 print(f"Trained model successfully saved to {model_path}")
