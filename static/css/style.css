@@ -1,0 +1,287 @@
+:root {
+    --bg-overlay: rgba(12, 18, 26, 0.82);
+    --panel-bg: rgba(23, 33, 46, 0.65);
+    --panel-border: rgba(255, 255, 255, 0.12);
+    --card-bg: rgba(30, 44, 62, 0.7);
+    --accent-green: #2ecc71;
+    --accent-emerald: #10b981;
+    --accent-orange: #ff5e36;
+    --accent-orange-hover: #e04a24;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --input-bg: rgba(15, 23, 42, 0.6);
+    --input-border: rgba(148, 163, 184, 0.25);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body, html {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.app-background {
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+}
+
+/* Glassmorphic Container */
+.glass-dashboard {
+    width: 100%;
+    max-width: 960px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--panel-border);
+    border-radius: 24px;
+    padding: 36px 40px;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
+}
+
+/* Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--panel-border);
+    margin-bottom: 28px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon {
+    font-size: 2.2rem;
+    background: rgba(46, 204, 113, 0.15);
+    padding: 8px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.brand-text h1 {
+    color: var(--text-main);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.brand-text p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-emerald);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-emerald);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-emerald);
+}
+
+/* Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+}
+
+.panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    padding: 24px;
+}
+
+.panel-title {
+    color: var(--text-main);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #cbd5e1;
+}
+
+/* Form Styles */
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    color: #cbd5e1;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-main);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.form-group select option {
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    border-color: var(--accent-emerald);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 13px 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, var(--accent-orange-hover), #c2410c);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(234, 88, 12, 0.45);
+}
+
+/* Metric Cards */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.metric-card {
+    background: var(--card-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.metric-label {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.metric-value {
+    margin-top: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.metric-value span:first-child {
+    color: var(--accent-green);
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.metric-unit {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+/* Advisory List */
+.recommendations-title {
+    color: #fbbf24;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.advisory-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.advisory-list li {
+    background: rgba(15, 23, 42, 0.45);
+    border-left: 3px solid var(--accent-emerald);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    line-height: 1.45;
+}
+
+.advisory-list li.placeholder-item {
+    border-left-color: #64748b;
+    color: var(--text-muted);
+    background: transparent;
+    padding-left: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 860px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .glass-dashboard {
+        padding: 24px;
+    }
+}
