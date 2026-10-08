@@ -3,144 +3,830 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agriculture Intelligence & Recommendation System</title>
+    <title>AgriSuggest AI</title>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        :root {
+        
+            --bg-overlay: rgba(16, 19, 39, 0.75);
+            --panel-bg: rgba(255, 255, 255, 0.75);
+            --panel-border: rgba(132, 204, 22, 0.35);
+            --card-bg: rgba(195, 223, 197, 0.9);
+            --accent-green: #15803d; 
+            --accent-emerald: #65a30d; 
+            --accent-button: #4d7c0f; 
+            --accent-button-hover: #3f6212; 
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --input-bg: rgba(195, 223, 197, 0.9);
+            --input-border: rgba(100, 116, 139, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #f4f9f1;
+            color: var(--text-main);
+        }
+
+        /* Full Background */
+        .app-background {
+            min-height: 100vh;
+            width: 100%;
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+                        url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* --- SIDEBAR LAYOUT --- */
+        .glass-dashboard {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            max-width: 1280px; 
+            min-height: 85vh;  
+            background: rgba(195, 223, 197, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        /* Left Sidebar Area */
+        .sidebar {
+            width: 320px; 
+            background: rgba(230, 245, 220, 0.4);
+            border-right: 1px solid var(--panel-border);
+            padding: 35px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 45px;
+        }
+
+        .brand-text h1 {
+            color: var(--accent-green);
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            white-space: nowrap; /* Forces text to stay on a single line */
+        }
+        
+        .brand-text p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            font-size: 1.8rem;
+        }
+
+        /* Vertical Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: rgba(101, 163, 13, 0.1);
+            border: 1px solid var(--panel-border);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-emerald);
+            color: #ffffff;
+            border: 1px solid var(--accent-green);
+            box-shadow: 0 4px 15px rgba(101, 163, 13, 0.3);
+        }
+
+        /* Right Main Content Area */
+        .content-area {
+            flex: 1;
+            padding: 45px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        /* Slide Content Visibility */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Inner Grid Layouts */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .full-panel {
+            width: 100%;
+        }
+
+        .panel-title {
+            color: #334155;
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 22px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 12px;
+        }
+
+        .panel-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 22px;
+        }
+
+        /* Form Controls */
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: #334155;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-group select option {
+            background-color: #ffffff;
+            color: var(--text-main);
+        }
+
+        .form-group select:invalid {
+            color: var(--text-muted);
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: var(--accent-emerald);
+            box-shadow: 0 0 0 3px rgba(101, 163, 13, 0.25);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-emerald), var(--accent-button));
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 20px rgba(101, 163, 13, 0.35);
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, var(--accent-button), var(--accent-button-hover));
+            transform: translateY(-2px);
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metrics-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .highlight-card {
+            border-color: var(--accent-emerald);
+            background: rgba(245, 250, 240, 0.95);
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            margin-top: 10px;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .metric-value span:first-child {
+            color: var(--accent-green);
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .metric-unit {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* Advisory Box */
+        .recommendations-title {
+            color: #b45309; /* Deep amber for light mode */
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .advisory-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .advisory-list li {
+            background: rgba(255, 255, 255, 0.7);
+            border-left: 4px solid var(--accent-emerald);
+            padding: 14px 16px;
+            border-radius: 0 8px 8px 0;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .advisory-list li.placeholder-item {
+            border-left-color: #94a3b8;
+            color: var(--text-muted);
+            background: transparent;
+            padding-left: 0;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            text-align: left;
+        }
+
+        .data-table th, .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .data-table th {
+            color: #334155;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .badge-high { background: rgba(46, 204, 113, 0.2); color: #15803d; }
+        .badge-medium { background: rgba(251, 191, 36, 0.3); color: #b45309; }
+
+        /* Seasonal Cards */
+        .season-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .season-box {
+            background: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .season-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 12px;
+        }
+
+        .season-header h3 {
+            font-size: 1.05rem;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .season-tag {
+            font-size: 0.8rem;
+            background: rgba(101, 163, 13, 0.2);
+            color: #15803d;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .tag-alert {
+            background: rgba(239, 68, 68, 0.15);
+            color: #b91c1c;
+        }
+
+        .season-metrics {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: #475569;
+        }
+
+        /* About Model */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+        }
+
+        .about-col h3 {
+            font-size: 1.1rem;
+            color: var(--accent-green);
+            margin-bottom: 14px;
+            font-weight: 800;
+        }
+
+        .about-col p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .model-stats-list, .stakeholder-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            font-size: 0.95rem;
+            color: #475569;
+        }
+
+        @media (max-width: 1024px) {
+            .glass-dashboard {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--panel-border);
+                padding: 25px;
+                gap: 25px;
+            }
+            .nav-tabs {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .dashboard-grid, .metrics-grid-3, .season-cards-grid, .about-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-area {
+                padding: 25px;
+                max-height: none;
+                overflow-y: visible;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="app-background">
+        <!-- Main Application Window -->
         <div class="glass-dashboard">
-            <!-- Header -->
-            <header class="dashboard-header">
+            
+            <!-- Left Sidebar Navigation -->
+            <aside class="sidebar">
                 <div class="brand">
-                    <span class="brand-icon">🌱🚜</span>
+                    <span class="brand-icon">🌱</span>
                     <div class="brand-text">
                         <h1>AgriSuggest AI</h1>
-                        <p>Seasonal Crop Yield Forecast & Decision Support</p>
+                        <p>Seasonal Crop Intelligence</p>
                     </div>
                 </div>
-                <div class="header-badge">
-                    <span class="live-dot"></span> ML Powered
-                </div>
-            </header>
+                
+                <nav class="nav-tabs">
+                    <button type="button" class="tab-btn active" data-tab="slide-predictor">🎯 Yield Predictor</button>
+                    <button type="button" class="tab-btn" data-tab="slide-economics">💰 Profit & Market</button>
+                    <button type="button" class="tab-btn" data-tab="slide-insights">📊 Seasonal Trends</button>
+                    <button type="button" class="tab-btn" data-tab="slide-about">ℹ️ About Model</button>
+                </nav>
+            </aside>
 
-            <!-- Dual-Column Content Grid -->
-            <main class="dashboard-grid">
-                <!-- Left Column: Input Form -->
-                <section class="panel form-panel">
-                    <h2 class="panel-title">Field Parameters</h2>
-                    <form id="prediction-form" method="POST" action="/predict">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="crop">Crop Variety</label>
-                                <div class="select-wrapper">
-                                    <select name="crop" id="crop" required>
-                                        <option value="" disabled {% if not selected_crop %}selected{% endif %}>Select</option>
-                                        <option value="Rice" {% if selected_crop == 'Rice' %}selected{% endif %}>Rice</option>
-                                        <option value="Wheat" {% if selected_crop == 'Wheat' %}selected{% endif %}>Wheat</option>
-                                        <option value="Maize" {% if selected_crop == 'Maize' %}selected{% endif %}>Maize</option>
-                                        <option value="Sugarcane" {% if selected_crop == 'Sugarcane' %}selected{% endif %}>Sugarcane</option>
-                                        <option value="Cotton" {% if selected_crop == 'Cotton' %}selected{% endif %}>Cotton</option>
-                                        <option value="Chilli" {% if selected_crop == 'Chilli' %}selected{% endif %}>Chilli</option>
-                                        <option value="Pulses" {% if selected_crop == 'Pulses' %}selected{% endif %}>Pulses</option>
-                                        <option value="Groundnut" {% if selected_crop == 'Groundnut' %}selected{% endif %}>Groundnut</option>
-                                    </select>
-                                </div>
-                            </div>
+            <!-- Right Content Area -->
+            <main class="content-area">
 
-                            <div class="form-group">
-                                <label for="season">Cropping Season</label>
-                                <div class="select-wrapper">
-                                    <select name="season" id="season" required>
-                                        <option value="" disabled {% if not selected_season %}selected{% endif %}>Select</option>
-                                        <option value="Kharif" {% if selected_season == 'Kharif' %}selected{% endif %}>Kharif (Monsoon)</option>
-                                        <option value="Rabi" {% if selected_season == 'Rabi' %}selected{% endif %}>Rabi (Winter)</option>
-                                        <option value="Zaid" {% if selected_season == 'Zaid' %}selected{% endif %}>Zaid (Summer)</option>
-                                    </select>
+                <!-- ================= SLIDE 1: PREDICTOR ================= -->
+                <section id="slide-predictor" class="tab-content active">
+                    <div class="dashboard-grid">
+                        <div class="panel form-panel">
+                            <h2 class="panel-title">Field Inputs</h2>
+                            <form id="prediction-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="crop">Crop Variety</label>
+                                        <select name="crop" id="crop" required>
+                                            <option value="" disabled selected>-- Select Crop --</option>
+                                            <option value="Rice">Rice</option>
+                                            <option value="Wheat">Wheat</option>
+                                            <option value="Maize">Maize</option>
+                                            <option value="Sugarcane">Sugarcane</option>
+                                            <option value="Cotton">Cotton</option>
+                                            <option value="Chilli">Chilli</option>
+                                            <option value="Pulses">Pulses</option>
+                                            <option value="Groundnut">Groundnut</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="season">Cropping Season</label>
+                                        <select name="season" id="season" required>
+                                            <option value="" disabled selected>-- Select Season --</option>
+                                            <option value="Kharif">Kharif (Monsoon)</option>
+                                            <option value="Rabi">Rabi (Winter)</option>
+                                            <option value="Zaid">Zaid (Summer)</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="irrigation_method">Irrigation System</label>
+                                        <select name="irrigation_method" id="irrigation_method" required>
+                                            <option value="" disabled selected>-- Select Irrigation --</option>
+                                            <option value="Drip">Drip Irrigation</option>
+                                            <option value="Sprinkler">Sprinkler</option>
+                                            <option value="Flood">Flood Irrigation</option>
+                                            <option value="Rainfed">Rainfed</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="farm_area">Cultivated Land (Ha)</label>
+                                        <input type="number" step="0.1" name="farm_area" id="farm_area" placeholder="e.g. 5.0" min="0.1" required>
+                                    </div>
+                                </div>
+                                <button type="submit" id="submit-btn" class="submit-btn">
+                                    <span>Generate Forecast</span>
+                                    <span class="btn-arrow">→</span>
+                                </button>
+                            </form>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="irrigation_method">Irrigation System</label>
-                                <div class="select-wrapper">
-                                    <select name="irrigation_method" id="irrigation_method" required>
-                                        <option value="" disabled {% if not selected_irrigation %}selected{% endif %}>Select</option>
-                                        <option value="Drip" {% if selected_irrigation == 'Drip' %}selected{% endif %}>Drip Irrigation</option>
-                                        <option value="Sprinkler" {% if selected_irrigation == 'Sprinkler' %}selected{% endif %}>Sprinkler</option>
-                                        <option value="Flood" {% if selected_irrigation == 'Flood' %}selected{% endif %}>Flood Irrigation</option>
-                                        <option value="Rainfed" {% if selected_irrigation == 'Rainfed' %}selected{% endif %}>Rainfed</option>
-                                    </select>
+                        <div class="panel results-panel">
+                            <h2 class="panel-title">Yield Output</h2>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <span class="metric-label">Predicted Yield</span>
+                                    <div class="metric-value">
+                                        <span id="yield-value">--</span>
+                                        <span class="metric-unit">Tonnes/Ha</span>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="metric-label">Total Harvest</span>
+                                    <div class="metric-value">
+                                        <span id="production-value">--</span>
+                                        <span class="metric-unit">Tonnes</span>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="farm_area">Cultivated Land (Ha)</label>
-                                <input 
-                                    type="number" 
-                                    step="0.1" 
-                                    name="farm_area" 
-                                    id="farm_area" 
-                                    placeholder="Type" 
-                                    value="{{ selected_area if selected_area is defined and selected_area is not none else '' }}" 
-                                    min="0.1" 
-                                    max="100.0" 
-                                    required
-                                >
-                            </div>
-                        </div>
-
-                        <button type="submit" id="submit-btn" class="submit-btn">
-                            <span>Generate Analysis</span>
-                            <span class="btn-arrow">→</span>
-                        </button>
-                    </form>
-                </section>
-
-                <!-- Right Column: Results & Metric Badges -->
-                <section class="panel results-panel">
-                    <h2 class="panel-title">Yield & Advisory Output</h2>
-
-                    <!-- Metric Highlights -->
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <span class="metric-label">Predicted Yield</span>
-                            <div class="metric-value">
-                                <span id="yield-value">{{ pred_yield if pred_yield is defined else '--' }}</span>
-                                <span class="metric-unit">Tonnes/Ha</span>
-                            </div>
-                        </div>
-
-                        <div class="metric-card">
-                            <span class="metric-label">Estimated Production</span>
-                            <div class="metric-value">
-                                <span id="production-value">{{ total_production if total_production is defined else '--' }}</span>
-                                <span class="metric-unit">Tonnes</span>
+                            <div class="recommendations-container">
+                                <h3 class="recommendations-title">Farmer Recommendations</h3>
+                                <ul id="recommendations-list" class="advisory-list">
+                                    <li class="placeholder-item">Select inputs and click <strong>Generate Forecast</strong>.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <!-- Actionable Advisory List -->
-                    <div class="recommendations-container">
-                        <h3 class="recommendations-title">Key Field Recommendations</h3>
-                        <ul id="recommendations-list" class="advisory-list">
-                            {% if recommendations %}
-                                {% for item in recommendations %}
-                                    <li class="advisory-item">{{ item }}</li>
-                                {% endfor %}
-                            {% else %}
-                                <li class="placeholder-item">Select parameters on the left and click <strong>Generate Analysis</strong> to display harvest predictions and agronomic advice.</li>
-                            {% endif %}
-                        </ul>
+                <!-- ================= SLIDE 2: PROFIT & ECONOMICS ================= -->
+                <section id="slide-economics" class="tab-content">
+                    <div class="panel full-panel">
+                        <h2 class="panel-title">Crop Economics & Profit Calculator</h2>
+                        <p class="panel-desc">Estimates your revenue and net profit based on market prices and farm production costs.</p>
+                        <div class="metrics-grid-3">
+                            <div class="metric-card">
+                                <span class="metric-label">Market Price</span>
+                                <div class="metric-value">
+                                    <span id="econ-price">--</span>
+                                    <span class="metric-unit">/ Tonne</span>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">Estimated Gross Revenue</span>
+                                <div class="metric-value">
+                                    <span id="econ-revenue">--</span>
+                                </div>
+                            </div>
+                            <div class="metric-card highlight-card">
+                                <span class="metric-label">Estimated Net Profit</span>
+                                <div class="metric-value">
+                                    <span id="econ-profit">--</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Crop</th>
+                                        <th>Avg Price / Tonne</th>
+                                        <th>Best Cropping Season</th>
+                                        <th>Typical Profit Margin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Sugarcane</td><td>₹3,500</td><td>Kharif</td><td><span class="badge badge-high">High</span></td></tr>
+                                    <tr><td>Chilli</td><td>₹1,03,000</td><td>Kharif</td><td><span class="badge badge-high">High</span></td></tr>
+                                    <tr><td>Cotton</td><td>₹68,000</td><td>Kharif / Rabi</td><td><span class="badge badge-medium">Medium</span></td></tr>
+                                    <tr><td>Rice</td><td>₹22,000</td><td>Kharif</td><td><span class="badge badge-medium">Medium</span></td></tr>
+                                    <tr><td>Wheat</td><td>₹23,800</td><td>Rabi</td><td><span class="badge badge-medium">Medium</span></td></tr>
+                                    <tr><td>Pulses</td><td>₹71,500</td><td>Rabi</td><td><span class="badge badge-medium">Medium</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
+
+                <!-- ================= SLIDE 3: SEASONAL INSIGHTS ================= -->
+                <section id="slide-insights" class="tab-content">
+                    <div class="panel full-panel">
+                        <h2 class="panel-title">Seasonal Agronomic Benchmarks</h2>
+                        <p class="panel-desc">Observed patterns across 4,000 farm plots in India across Kharif, Rabi, and Zaid cycles.</p>
+                        <div class="season-cards-grid">
+                            <div class="season-box kharif-box">
+                                <div class="season-header">
+                                    <h3>🌧️ Kharif</h3>
+                                    <span class="season-tag">Highest Yield</span>
+                                </div>
+                                <ul class="season-metrics">
+                                    <li><strong>Avg Rainfall:</strong> ~849 mm</li>
+                                    <li><strong>Avg Temperature:</strong> 28.5 °C</li>
+                                    <li><strong>Pest Risk:</strong> 54.5% (High)</li>
+                                    <li><strong>Water Efficiency:</strong> 5.91 t / 1000m³</li>
+                                    <li><strong>Avg Net Profit:</strong> +₹1,79,300</li>
+                                </ul>
+                            </div>
+
+                            <div class="season-box rabi-box">
+                                <div class="season-header">
+                                    <h3>❄️ Rabi</h3>
+                                    <span class="season-tag">Balanced</span>
+                                </div>
+                                <ul class="season-metrics">
+                                    <li><strong>Avg Rainfall:</strong> ~438 mm</li>
+                                    <li><strong>Avg Temperature:</strong> 23.5 °C</li>
+                                    <li><strong>Pest Risk:</strong> 40.5% (Moderate)</li>
+                                    <li><strong>Water Efficiency:</strong> 5.18 t / 1000m³</li>
+                                    <li><strong>Avg Net Profit:</strong> +₹88,200</li>
+                                </ul>
+                            </div>
+
+                            <div class="season-box zaid-box">
+                                <div class="season-header">
+                                    <h3>☀️ Zaid</h3>
+                                    <span class="season-tag tag-alert">Needs Drip</span>
+                                </div>
+                                <ul class="season-metrics">
+                                    <li><strong>Avg Rainfall:</strong> ~304 mm</li>
+                                    <li><strong>Avg Temperature:</strong> 31.0 °C</li>
+                                    <li><strong>Pest Risk:</strong> 38.2% (Low)</li>
+                                    <li><strong>Water Efficiency:</strong> 4.44 t / 1000m³</li>
+                                    <li><strong>Avg Net Profit:</strong> -₹26,600</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= SLIDE 4: ABOUT MODEL ================= -->
+                <section id="slide-about" class="tab-content">
+                    <div class="panel full-panel">
+                        <h2 class="panel-title">Project Overview & AI Model Info</h2>
+                        <div class="about-grid">
+                            <div class="about-col">
+                                <h3>🤖 Machine Learning Architecture</h3>
+                                <p>Trained on agricultural records covering environmental, nutrient, and economic indicators across Indian agricultural regions.</p>
+                                <ul class="model-stats-list">
+                                    <li><strong>Primary Algorithm:</strong> Gradient Boosting Regressor</li>
+                                    <li><strong>Variance Score (R²):</strong> 0.9702</li>
+                                    <li><strong>Root Mean Square Error:</strong> 2.14 Tonnes/Ha</li>
+                                    <li><strong>Mean Absolute Error:</strong> 0.62 Tonnes/Ha</li>
+                                </ul>
+                            </div>
+                            <div class="about-col">
+                                <h3>👥 Target Stakeholders</h3>
+                                <ul class="stakeholder-list">
+                                    <li>👨‍🌾 <strong>Farmers:</strong> Tailored crop and irrigation advice.</li>
+                                    <li>🏛️ <strong>Policy Planners:</strong> Regional yield forecasts and grain buffer reserves.</li>
+                                    <li>🌱 <strong>Agronomists:</strong> Soil pH & fertilizer calibration.</li>
+                                    <li>🏦 <strong>Agri-Fintech & Insurers:</strong> Data-driven risk assessment.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </main>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- Embedded Client Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Tab / Slide Switching Logic
+            const tabBtns = document.querySelectorAll(".tab-btn");
+            const tabContents = document.querySelectorAll(".tab-content");
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    tabBtns.forEach(b => b.classList.remove("active"));
+                    tabContents.forEach(c => c.classList.remove("active"));
+
+                    btn.classList.add("active");
+                    const target = document.getElementById(btn.getAttribute("data-tab"));
+                    if (target) target.classList.add("active");
+                });
+            });
+
+            // 2. Crop market pricing benchmark (INR/Tonne)
+            const cropPrices = {
+                "Rice": 22000,
+                "Wheat": 23800,
+                "Maize": 21000,
+                "Sugarcane": 3500,
+                "Cotton": 68000,
+                "Chilli": 103000,
+                "Pulses": 71500,
+                "Groundnut": 56000
+            };
+
+            // 3. Form Prediction & Dynamic Economic Update
+            const form = document.getElementById("prediction-form");
+            const submitBtn = document.getElementById("submit-btn");
+            const yieldValue = document.getElementById("yield-value");
+            const productionValue = document.getElementById("production-value");
+            const recommendationsList = document.getElementById("recommendations-list");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                submitBtn.querySelector("span").textContent = "Processing...";
+                submitBtn.disabled = true;
+
+                const crop = document.getElementById("crop").value;
+                const season = document.getElementById("season").value;
+                const area = parseFloat(document.getElementById("farm_area").value) || 1.0;
+
+                const payload = {
+                    crop: crop,
+                    season: season,
+                    irrigation_method: document.getElementById("irrigation_method").value,
+                    farm_area: area
+                };
+
+                try {
+                    const response = await fetch("/predict", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        yieldValue.textContent = Number(data.yield).toFixed(2);
+                        productionValue.textContent = Number(data.total_production).toFixed(1);
+
+                        // Update Slide 2 (Economics) based on prediction
+                        const pricePerTonne = cropPrices[crop] || 25000;
+                        const grossRevenue = Math.round(data.total_production * pricePerTonne);
+                        const estimatedCost = Math.round(area * 35000); // 35k estimated cost per Hectare
+                        const netProfit = grossRevenue - estimatedCost;
+
+                        document.getElementById("econ-price").textContent = "₹" + pricePerTonne.toLocaleString("en-IN");
+                        document.getElementById("econ-revenue").textContent = "₹" + grossRevenue.toLocaleString("en-IN");
+                        document.getElementById("econ-profit").textContent = (netProfit >= 0 ? "₹" : "-₹") + Math.abs(netProfit).toLocaleString("en-IN");
+
+                        // Populate farmer recommendations
+                        recommendationsList.innerHTML = "";
+                        data.recommendations.forEach(item => {
+                            const li = document.createElement("li");
+                            li.textContent = item;
+                            recommendationsList.appendChild(li);
+                        });
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("Error connecting to server.");
+                } finally {
+                    submitBtn.querySelector("span").textContent = "Generate Forecast";
+                    submitBtn.disabled = false;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
