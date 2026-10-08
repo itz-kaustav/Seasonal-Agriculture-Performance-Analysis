@@ -1,280 +1,186 @@
-:root {
-    --bg-overlay: rgba(12, 18, 26, 0.82);
-    --panel-bg: rgba(23, 33, 46, 0.65);
-    --panel-border: rgba(255, 255, 255, 0.12);
-    --card-bg: rgba(30, 44, 62, 0.7);
-    --accent-green: #2ecc71;
-    --accent-emerald: #10b981;
-    --accent-orange: #ff5e36;
-    --accent-orange-hover: #e04a24;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --input-bg: rgba(15, 23, 42, 0.6);
-    --input-border: rgba(148, 163, 184, 0.25);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-body, html {
-    width: 100%;
-    min-height: 100vh;
-}
-
-.app-background {
-    min-height: 100vh;
-    width: 100%;
-    background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
-                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat fixed;
+/* Navigation Tabs */
+.nav-tabs {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 20px;
-}
-
-.glass-dashboard {
-    width: 100%;
-    max-width: 960px;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 4px;
+    border-radius: 12px;
     border: 1px solid var(--panel-border);
-    border-radius: 24px;
-    padding: 36px 40px;
-    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
 }
 
-.dashboard-header {
+.tab-btn {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+    background: var(--accent-emerald);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+}
+
+/* Tab Content Transitions */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.25s ease-in-out;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.full-panel {
+    width: 100%;
+}
+
+.panel-desc {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin-bottom: 20px;
+}
+
+/* Slide 2: Economics */
+.metrics-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.highlight-card {
+    border-color: rgba(46, 204, 113, 0.4) !important;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    color: var(--text-main);
+    text-align: left;
+}
+
+.data-table th, .data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.data-table th {
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-high { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+.badge-medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+
+/* Slide 3: Season Cards */
+.season-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.season-box {
+    background: var(--card-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.season-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--panel-border);
-    margin-bottom: 28px;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.brand-icon {
-    font-size: 2.2rem;
-    background: rgba(46, 204, 113, 0.15);
-    padding: 8px 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(46, 204, 113, 0.3);
-}
-
-.brand-text h1 {
-    color: var(--text-main);
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-}
-
-.brand-text p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 2px;
-}
-
-.header-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(16, 185, 129, 0.15);
-    color: var(--accent-emerald);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.live-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--accent-emerald);
-    border-radius: 50%;
-    box-shadow: 0 0 10px var(--accent-emerald);
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-}
-
-.panel {
-    background: var(--panel-bg);
-    border: 1px solid var(--panel-border);
-    border-radius: 18px;
-    padding: 24px;
-}
-
-.panel-title {
-    color: var(--text-main);
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #cbd5e1;
-}
-
-.form-row {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
     margin-bottom: 16px;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.form-group label {
-    color: #cbd5e1;
-    font-size: 0.82rem;
-    font-weight: 600;
-}
-
-.form-group select,
-.form-group input {
-    width: 100%;
-    background: var(--input-bg);
-    border: 1px solid var(--input-border);
-    color: var(--text-main);
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 0.92rem;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-.form-group select option {
-    background-color: #0f172a;
-    color: #f8fafc;
-}
-
-.form-group select:focus,
-.form-group input:focus {
-    border-color: var(--accent-emerald);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-}
-
-.submit-btn {
-    width: 100%;
-    background: linear-gradient(135deg, var(--accent-orange), #ea580c);
-    color: #ffffff;
-    border: none;
-    border-radius: 12px;
-    padding: 13px 20px;
+.season-header h3 {
     font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
-    transition: all 0.2s ease;
-    margin-top: 10px;
+    color: var(--text-main);
 }
 
-.submit-btn:hover {
-    background: linear-gradient(135deg, var(--accent-orange-hover), #c2410c);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(234, 88, 12, 0.45);
-}
-
-.metrics-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 22px;
-}
-
-.metric-card {
-    background: var(--card-bg);
-    border: 1px solid var(--panel-border);
-    border-radius: 14px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.metric-label {
-    color: var(--text-muted);
-    font-size: 0.78rem;
+.season-tag {
+    font-size: 0.72rem;
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    padding: 2px 8px;
+    border-radius: 10px;
     font-weight: 600;
-    text-transform: uppercase;
 }
 
-.metric-value {
-    margin-top: 8px;
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
+.tag-alert {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
 }
 
-.metric-value span:first-child {
-    color: var(--accent-green);
-    font-size: 1.6rem;
-    font-weight: 800;
-}
-
-.metric-unit {
-    color: #94a3b8;
-    font-size: 0.75rem;
-}
-
-.recommendations-title {
-    color: #fbbf24;
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
-.advisory-list {
+.season-metrics {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #cbd5e1;
 }
 
-.advisory-list li {
-    background: rgba(15, 23, 42, 0.45);
-    border-left: 3px solid var(--accent-emerald);
-    padding: 10px 14px;
-    border-radius: 0 8px 8px 0;
-    color: #e2e8f0;
-    font-size: 0.85rem;
-    line-height: 1.45;
+/* Slide 4: About */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
 }
 
-.advisory-list li.placeholder-item {
-    border-left-color: #64748b;
+.about-col h3 {
+    font-size: 0.95rem;
+    color: #f8fafc;
+    margin-bottom: 12px;
+}
+
+.about-col p {
     color: var(--text-muted);
-    background: transparent;
-    padding-left: 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+.model-stats-list, .stakeholder-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #cbd5e1;
 }
 
 @media (max-width: 860px) {
-    .dashboard-grid {
+    .metrics-grid-3, .season-cards-grid, .about-grid {
         grid-template-columns: 1fr;
     }
-    
-    .glass-dashboard {
-        padding: 24px;
+    .nav-tabs {
+        flex-wrap: wrap;
     }
 }
